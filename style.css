@@ -127,14 +127,31 @@ body {
     z-index: 10;
     flex-shrink: 0;
     transition: var(--transition-smooth);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+#sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+#sidebar::-webkit-scrollbar-thumb {
+    background: rgba(100, 100, 100, 0.2);
+    border-radius: 3px;
 }
 
 #sidebar-header {
-    padding: 20px;
+    padding: 45px 20px 20px 20px; /* Increased top padding to leave blank space above orange part */
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-color: var(--bg-card);
 }
 
 .logo-area {
@@ -183,7 +200,7 @@ body {
 
 /* Import Section - Compact Row Layout */
 #import-section {
-    padding: 10px 12px;
+    padding: 25px 12px 10px 12px; /* Increased top padding to push txt and photo sections down */
     display: flex;
     flex-direction: row; /* Side-by-side layout */
     gap: 8px;
@@ -228,7 +245,9 @@ body {
 /* Chat List Section */
 #chat-list-section {
     flex-grow: 1;
-    overflow-y: auto;
+    flex-shrink: 0;
+    min-height: 450px; /* Guarantee height so it's at least 3x taller */
+    overflow-y: visible; /* Let the parent sidebar scroll instead */
     padding: 15px 20px;
     display: flex;
     flex-direction: column;
@@ -429,6 +448,11 @@ h2 {
 #sidebar-nav {
     display: flex;
     border-top: 1px solid var(--border-color);
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    background-color: var(--bg-card);
+    margin-top: auto;
 }
 
 .nav-item {
@@ -1087,8 +1111,8 @@ h2 {
 
 /* Custom scrollbar styling specifically for chat messages to make it very visible and easy to scroll */
 #chat-messages::-webkit-scrollbar {
-    width: 10px; /* Wider scrollbar on desktop and mobile */
-    height: 10px;
+    width: 16px; /* Wider scrollbar on desktop and mobile */
+    height: 16px;
 }
 
 #chat-messages::-webkit-scrollbar-track {
@@ -1428,24 +1452,25 @@ h2 {
 
 /* Device Toggle Container */
 #simulator-toggle-container {
-    position: fixed;
-    top: 10px;
-    left: 15px;
-    z-index: 10000;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 12px;
+    margin-top: 8px;
+    z-index: 100;
 }
 
 .simulator-btn {
     background: rgba(21, 23, 30, 0.85);
-    border: 1.2px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     color: #ffffff;
-    padding: 6px 14px;
+    padding: 8px 14px;
     font-size: 0.78rem;
     font-weight: 600;
-    border-radius: 20px;
+    border-radius: 8px;
     cursor: pointer;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    box-shadow: -4px 4px 15px rgba(0,0,0,0.3);
     transition: var(--transition-fast);
     display: flex;
     align-items: center;
@@ -1470,15 +1495,31 @@ h2 {
 #device-wrapper.mobile-mode {
     width: 375px;
     height: 812px;
-    border: 10px solid #272a30;
-    border-radius: 36px;
-    box-shadow: 0 25px 60px -10px rgba(0,0,0,0.5);
+    border: 16px solid #1e293b;
+    border-radius: 40px;
+    box-shadow: 
+        0 0 0 2px #334155,
+        0 40px 100px rgba(0, 0, 0, 0.8),
+        inset 0 0 0 4px #000;
     background-color: var(--bg-app);
     overflow: hidden;
     position: absolute;
-    top: 55%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+@media (max-height: 860px) {
+    #device-wrapper.mobile-mode { transform: translate(-50%, -50%) scale(0.9); }
+}
+@media (max-height: 780px) {
+    #device-wrapper.mobile-mode { transform: translate(-50%, -50%) scale(0.8); }
+}
+@media (max-height: 700px) {
+    #device-wrapper.mobile-mode { transform: translate(-50%, -50%) scale(0.7); }
+}
+@media (max-height: 620px) {
+    #device-wrapper.mobile-mode { transform: translate(-50%, -50%) scale(0.6); }
 }
 
 /* iPhone Notch Mockup */
@@ -1490,7 +1531,7 @@ h2 {
     transform: translateX(-50%);
     width: 150px;
     height: 24px;
-    background-color: #272a30;
+    background-color: #000;
     border-bottom-left-radius: 16px;
     border-bottom-right-radius: 16px;
     z-index: 10001;
@@ -1516,8 +1557,13 @@ h2 {
 }
 
 /* Adjust scroll helper in simulator mode */
+#device-wrapper.mobile-mode #app-container {
+    padding-top: 40px; /* Shift the entire UI down in 13 mini mode to clear the top area */
+    box-sizing: border-box;
+}
+
 #device-wrapper.mobile-mode #chat-messages {
-    padding-top: 24px; /* Account for notch spacing */
+    padding-top: 5px; /* Reduced since app-container already has padding */
 }
 
 /* Ensure background styling covers simulator wrapper */

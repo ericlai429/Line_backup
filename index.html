@@ -18,18 +18,10 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#06C755">
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=3">
 </head>
 <body class="dark-mode">
-    <!-- 手機/PC 切換按鈕 -->
-    <div id="simulator-toggle-container">
-        <button id="toggle-view-btn" class="simulator-btn">
-            <svg class="mode-icon" viewBox="0 0 24 24" width="14" height="14" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
-                <path id="mode-icon-path" fill="currentColor" d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/>
-            </svg>
-            <span id="toggle-view-text" style="vertical-align: middle;">切換為 PC 模式</span>
-        </button>
-    </div>
+    <!-- Toggle button moved into sidebar -->
 
     <div id="device-wrapper" class="mobile-mode">
         <div class="iphone-notch"></div>
@@ -75,14 +67,15 @@
                 </div>
             </section>
 
-            <!-- 對話列表 -->
-            <section id="chat-list-section">
-                <h2>匯入的聊天室</h2>
-                <div id="chat-list" class="list-container">
-                    <div class="empty-state">尚無匯入的對話</div>
-                </div>
-            </section>
-
+            <!-- 手機/PC 切換按鈕 -->
+            <div id="simulator-toggle-container">
+                <button id="toggle-view-btn" class="simulator-btn">
+                    <svg class="mode-icon" viewBox="0 0 24 24" width="14" height="14" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                        <path id="mode-icon-path" fill="currentColor" d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/>
+                    </svg>
+                    <span id="toggle-view-text" style="vertical-align: middle;">切換為 PC 模式</span>
+                </button>
+            </div>
             <!-- 篩選與搜尋面板 -->
             <section id="filter-section">
                 <h2>篩選與搜尋</h2>
@@ -99,6 +92,14 @@
                     <input type="date" id="date-to" placeholder="結束日期">
                 </div>
                 <button id="clear-filters" class="btn btn-secondary">重設篩選</button>
+            </section>
+
+            <!-- 對話列表 -->
+            <section id="chat-list-section">
+                <h2>匯入的聊天室</h2>
+                <div id="chat-list" class="list-container">
+                    <div class="empty-state">尚無匯入的對話</div>
+                </div>
             </section>
 
             <!-- 導覽切換 (切換主畫面內容) -->
