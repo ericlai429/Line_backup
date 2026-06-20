@@ -300,6 +300,44 @@
         });
     </script>
 
+    <!-- Demo 提示浮窗（前3次開啟自動顯示） -->
+    <div id="demo-widget" class="demo-hidden">
+        <div class="demo-header">
+            <span>💡 快速教學</span>
+            <button id="demo-close" title="關閉">&times;</button>
+        </div>
+        <div class="demo-content">
+            <div class="demo-animation">
+                <div class="demo-sidebar">
+                    <div class="demo-file">LINE_2026.txt</div>
+                    <div class="demo-file">圖片資料夾</div>
+                </div>
+                <div class="demo-cursor"></div>
+            </div>
+            <div class="demo-text">將備份檔案與相片拖放至左側區域即可開始瀏覽</div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const demoWidget = document.getElementById('demo-widget');
+            const demoClose = document.getElementById('demo-close');
+            const demoCountKey = 'line_backup_demo_count_v2';
+            let demoCount = parseInt(localStorage.getItem(demoCountKey) || '0');
+
+            if (demoCount < 3) {
+                setTimeout(() => {
+                    demoWidget.classList.remove('demo-hidden');
+                    demoCount++;
+                    localStorage.setItem(demoCountKey, demoCount);
+                }, 1500);
+            }
+
+            demoClose.addEventListener('click', () => {
+                demoWidget.classList.add('demo-hidden');
+            });
+        });
+    </script>
     <script src="app.js"></script>
 </body>
 </html>
