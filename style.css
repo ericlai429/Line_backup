@@ -1183,11 +1183,11 @@ h2 {
         flex-direction: column;
     }
 
-    /* Compact headers on mobile */
+    /* Compact headers on mobile (highly optimized, 38px height) */
     #chat-header, .panel-header {
-        height: 52px !important;
-        padding: 0 12px !important;
-        gap: 8px !important;
+        height: 38px !important;
+        padding: 0 8px !important;
+        gap: 6px !important;
     }
 
     #chat-header {
@@ -1200,7 +1200,7 @@ h2 {
     }
 
     .chat-info h2, .panel-header h2 {
-        font-size: 0.95rem !important;
+        font-size: 0.88rem !important;
         font-weight: 600 !important;
         margin: 0 !important;
         white-space: nowrap;
@@ -1218,20 +1218,20 @@ h2 {
         min-width: 0;
     }
 
-    /* Compact me-selector in header */
+    /* Extremely compact me-selector in header */
     .me-selector-wrapper {
-        padding: 3px 8px !important;
-        border-radius: 8px !important;
-        gap: 4px !important;
+        padding: 2px 6px !important;
+        border-radius: 6px !important;
+        gap: 2px !important;
     }
 
     .me-label {
-        font-size: 0.72rem !important;
+        font-size: 0.65rem !important;
     }
 
     .me-select {
-        font-size: 0.78rem !important;
-        max-width: 70px !important;
+        font-size: 0.7rem !important;
+        max-width: 58px !important;
     }
 
     /* Compact actions */
@@ -1244,8 +1244,20 @@ h2 {
     }
 
     #delete-chat-btn {
-        padding: 4px 8px !important;
-        font-size: 0.72rem !important;
+        padding: 2px 6px !important;
+        font-size: 0.65rem !important;
+        border-radius: 4px !important;
+    }
+
+    /* Tiny back button on mobile */
+    .chat-selected .back-to-list-btn {
+        padding: 3px !important;
+        margin-right: 4px !important;
+    }
+
+    .chat-selected .back-to-list-btn svg {
+        width: 16px !important;
+        height: 16px !important;
     }
 
     /* Expand chat messages padding for mobile */
