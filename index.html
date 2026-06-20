@@ -21,10 +21,22 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="dark-mode">
-    <div id="app-container">
-        <div class="version-badge">1.04</div>
-        <!-- 側邊欄 -->
-        <aside id="sidebar">
+    <!-- 手機/PC 切換按鈕 -->
+    <div id="simulator-toggle-container">
+        <button id="toggle-view-btn" class="simulator-btn">
+            <svg class="mode-icon" viewBox="0 0 24 24" width="14" height="14" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
+                <path id="mode-icon-path" fill="currentColor" d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/>
+            </svg>
+            <span id="toggle-view-text" style="vertical-align: middle;">切換為 PC 模式</span>
+        </button>
+    </div>
+
+    <div id="device-wrapper" class="mobile-mode">
+        <div class="iphone-notch"></div>
+        <div id="app-container">
+            <div class="version-badge">1.04</div>
+            <!-- 側邊欄 -->
+            <aside id="sidebar">
             <header id="sidebar-header">
                 <div class="logo-area">
                     <svg class="logo-icon" viewBox="0 0 24 24" width="28" height="28">
@@ -257,6 +269,29 @@
         <div id="lightbox-caption"></div>
         <button id="lightbox-jump-btn" class="btn btn-primary">跳轉至對話位置</button>
     </div>
+
+    </div> <!-- #device-wrapper -->
+
+    <!-- 切換模擬器邏輯 -->
+    <script>
+        document.getElementById('toggle-view-btn').addEventListener('click', function() {
+            const wrapper = document.getElementById('device-wrapper');
+            const textEl = document.getElementById('toggle-view-text');
+            const pathEl = document.getElementById('mode-icon-path');
+            
+            if (wrapper.classList.contains('mobile-mode')) {
+                wrapper.classList.remove('mobile-mode');
+                wrapper.classList.add('desktop-mode');
+                textEl.textContent = '切換為 i13 Mini 模式';
+                pathEl.setAttribute('d', 'M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z');
+            } else {
+                wrapper.classList.remove('desktop-mode');
+                wrapper.classList.add('mobile-mode');
+                textEl.textContent = '切換為 PC 模式';
+                pathEl.setAttribute('d', 'M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z');
+            }
+        });
+    </script>
 
     <script src="app.js"></script>
 </body>

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'line-backup-v10';
+const CACHE_NAME = 'line-backup-v11';
 const ASSETS = [
   './',
   './index.html',

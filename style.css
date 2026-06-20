@@ -110,8 +110,8 @@ body {
 /* Main Container Layout */
 #app-container {
     display: flex;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
+    width: 100%;
     position: relative;
 }
 
@@ -1121,13 +1121,13 @@ h2 {
     overflow-y: scroll;
 }
 
-@media (max-width: 768px) {
+@container app-container (max-width: 768px) {
     /* Base container behavior */
     #app-container {
         flex-direction: column;
         overflow: hidden;
-        height: 100vh;
-        width: 100vw;
+        height: 100%;
+        width: 100%;
     }
 
     /* 1. When a chat is NOT selected: show full-screen sidebar to upload and choose chat */
@@ -1357,7 +1357,7 @@ h2 {
     display: none !important;
 }
 
-@media (max-width: 768px) {
+@container app-container (max-width: 768px) {
     .chat-selected .back-to-list-btn {
         display: inline-flex !important;
         margin-right: 8px;
@@ -1421,4 +1421,112 @@ h2 {
     background-origin: border-box;
     background-clip: padding-box, border-box;
 }
+
+/* ==========================================================================
+   MOBILE SIMULATION ENGINE (iPhone 13 Mini Default)
+   ========================================================================== */
+
+/* Device Toggle Container */
+#simulator-toggle-container {
+    position: fixed;
+    top: 10px;
+    left: 15px;
+    z-index: 10000;
+}
+
+.simulator-btn {
+    background: rgba(21, 23, 30, 0.85);
+    border: 1.2px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border-radius: 20px;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: var(--transition-fast);
+    display: flex;
+    align-items: center;
+}
+
+.simulator-btn:hover {
+    background: var(--line-primary);
+    border-color: var(--line-primary);
+    transform: translateY(-1px);
+}
+
+/* Device Wrapper styling */
+#device-wrapper {
+    transition: var(--transition-smooth);
+    margin: 0 auto;
+    position: relative;
+    container-type: inline-size;
+    container-name: app-container;
+}
+
+/* 1. Mobile Simulator Mode (iPhone 13 Mini size: 375px * 812px) */
+#device-wrapper.mobile-mode {
+    width: 375px;
+    height: 812px;
+    border: 10px solid #272a30;
+    border-radius: 36px;
+    box-shadow: 0 25px 60px -10px rgba(0,0,0,0.5);
+    background-color: var(--bg-app);
+    overflow: hidden;
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* iPhone Notch Mockup */
+#device-wrapper.mobile-mode .iphone-notch {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    height: 24px;
+    background-color: #272a30;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    z-index: 10001;
+    pointer-events: none;
+}
+
+/* 2. Desktop Mode */
+#device-wrapper.desktop-mode {
+    width: 100vw;
+    height: 100vh;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: transparent;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#device-wrapper.desktop-mode .iphone-notch {
+    display: none;
+}
+
+/* Adjust scroll helper in simulator mode */
+#device-wrapper.mobile-mode #chat-messages {
+    padding-top: 24px; /* Account for notch spacing */
+}
+
+/* Ensure background styling covers simulator wrapper */
+body {
+    background-color: #0c0d12 !important; /* Elegant true black outside the device frame */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
 
