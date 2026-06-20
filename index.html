@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Line 對話紀錄備份瀏覽器</title>
+    <!-- Google Fonts: Noto Sans TC & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- PWA Settings -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#06C755">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="light-mode">
+    <div id="app-container">
+        <!-- 側邊欄 -->
+        <aside id="sidebar">
+            <header id="sidebar-header">
+                <div class="logo-area">
+                    <svg class="logo-icon" viewBox="0 0 24 24" width="28" height="28">
+                        <path fill="currentColor" d="M12 2C6.48 2 2 5.48 2 9.8c0 2.45 1.4 4.63 3.6 6.03L4.62 20.3c-.09.31.14.62.46.57l4.57-.75c.77.17 1.57.28 2.35.28 5.52 0 10-3.48 10-7.8S17.52 2 12 2zm-2.8 11.2H7.6c-.33 0-.6-.27-.6-.6s.27-.6.6-.6h1.6c.33 0 .6.27 .6.6s-.27.6-.6.6zm0-2.4H7.6c-.33 0-.6-.27-.6-.6s.27-.6.6-.6h1.6c.33 0 .6.27 .6.6s-.27.6-.6.6zm4.8 2.4h-1.6c-.33 0-.6-.27-.6-.6s.27-.6.6-.6h1.6c.33 0 .6.27 .6.6s-.27.6-.6.6zm0-2.4h-1.6c-.33 0-.6-.27-.6-.6s.27-.6.6-.6h1.6c.33 0 .6.27 .6.6s-.27.6-.6.6zm3.2 2.4h-1.6c-.33 0-.6-.27-.6-.6s.27-.6.6-.6h1.6c.33 0 .6.27 .6.6s-.27.6-.6.6zm0-2.4h-1.6c-.33 0-.6-.27-.6-.6s.27-.6.6-.6h1.6c.33 0 .6.27 .6.6s-.27.6-.6.6z"/>
+                    </svg>
+                    <h1>Line Backup</h1>
+                </div>
+                <button id="theme-toggle" aria-label="切換深淺色模式">
+                    <!-- Sun Icon -->
+                    <svg class="sun-icon" viewBox="0 0 24 24" width="20" height="20">
+                        <circle cx="12" cy="12" r="5" fill="currentColor"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <!-- Moon Icon -->
+                    <svg class="moon-icon" viewBox="0 0 24 24" width="20" height="20">
+                        <path fill="currentColor" d="M12.3 22h-.1c-5.5 0-10-4.5-10-10C2.2 6.9 6.2 2.7 11.5 2.1c.5-.1 1 .3.9.8-.1.5-.6.9-1.1.9-4 0-7.2 3.2-7.2 7.2s3.2 7.2 7.2 7.2c3 0 5.7-1.8 6.7-4.5.2-.5.8-.8 1.3-.6.5.2.8.8.6 1.3-.9 2.5-3.3 4.3-6.1 4.7-1 .1-1 .1-1.5.1z"/>
+                    </svg>
+                </button>
+            </header>
+
+            <!-- 載入與檔案庫 -->
+            <section id="import-section">
+                <div class="drop-zone" id="txt-drop-zone">
+                    <svg viewBox="0 0 24 24" width="32" height="32">
+                        <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                    <span>匯入對話紀錄 (.txt / .json)</span>
+                    <input type="file" id="txt-file-input" accept=".txt,.json" style="display: none;">
+                </div>
+                <div class="drop-zone" id="media-drop-zone">
+                    <svg viewBox="0 0 24 24" width="32" height="32">
+                        <path fill="currentColor" d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2zM5 5v14h14V5H5zm12 6-3.5 4.5-2.5-3L7 17h10l-3-6z"/>
+                    </svg>
+                    <span>拖放相片資料夾或檔案</span>
+                    <input type="file" id="media-file-input" multiple accept="image/*" style="display: none;">
+                </div>
+            </section>
+
+            <!-- 對話列表 -->
+            <section id="chat-list-section">
+                <h2>匯入的聊天室</h2>
+                <div id="chat-list" class="list-container">
+                    <div class="empty-state">尚無匯入的對話</div>
+                </div>
+            </section>
+
+            <!-- 篩選與搜尋面板 -->
+            <section id="filter-section">
+                <h2>篩選與搜尋</h2>
+                <div class="filter-group">
+                    <input type="text" id="search-input" placeholder="搜尋訊息關鍵字...">
+                </div>
+                <div class="filter-group select-wrapper">
+                    <select id="sender-filter">
+                        <option value="">所有發言者</option>
+                    </select>
+                </div>
+                <div class="filter-group date-filters">
+                    <input type="date" id="date-from" placeholder="開始日期">
+                    <input type="date" id="date-to" placeholder="結束日期">
+                </div>
+                <button id="clear-filters" class="btn btn-secondary">重設篩選</button>
+            </section>
+
+            <!-- 導覽切換 (切換主畫面內容) -->
+            <nav id="sidebar-nav">
+                <button class="nav-item active" data-tab="chat">
+                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+                    聊天紀錄
+                </button>
+                <button class="nav-item" data-tab="gallery">
+                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4 2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/></svg>
+                    相簿庫
+                </button>
+                <button class="nav-item" data-tab="stats">
+                    <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                    統計分析
+                </button>
+            </nav>
+        </aside>
+
+        <!-- 主顯示區 -->
+        <main id="main-content">
+            <!-- 初始歡迎畫面 -->
+            <div id="welcome-panel" class="tab-panel active">
+                <div class="welcome-container">
+                    <div class="welcome-header">
+                        <svg viewBox="0 0 24 24" width="64" height="64">
+                            <path fill="#25D366" d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm0 1.69c4.53 0 8.22 3.69 8.22 8.22 0 2.2-.57 4.34-1.66 6.23l.1.15 1.12 3.32-3.4-.89-.15.09c-1.81 1.07-3.9 1.64-6.04 1.64-4.53 0-8.22-3.69-8.22-8.22 0-2.2.57-4.34 1.66-6.23l-.1-.15-1.12-3.32 3.4.89.15-.09c1.81-1.07 3.9-1.64 6.04-1.64z"/>
+                        </svg>
+                        <h2>歡迎使用 Line 對話紀錄備份瀏覽器</h2>
+                        <p>這是一個 100% 在您本地執行、安全且隱私的對話紀錄與相片檢視工具。</p>
+                    </div>
+
+                    <div class="guide-cards">
+                        <div class="guide-card">
+                            <h3>第一步：匯入文字檔</h3>
+                            <p>在 Line 聊天室中，點選「設定」>「傳送聊天紀錄」，將產生的 <code>.txt</code> 檔案拖放到左側或下方區域即可解析對話。</p>
+                            <button class="btn btn-primary" onclick="document.getElementById('txt-file-input').click()">選擇 .txt 檔</button>
+                        </div>
+                        <div class="guide-card">
+                            <h3>第二步：匯入照片（選填）</h3>
+                            <p>將聊天室導出的圖片資料夾（或包含相片的資料夾）拖入左側或下方區域。程式會自動將聊天中的 <code>[圖片]</code> 連結顯示為真實照片！</p>
+                            <button class="btn btn-secondary" onclick="document.getElementById('media-file-input').click()">選擇照片檔案</button>
+                        </div>
+                    </div>
+
+                    <div class="features-list">
+                        <h3>功能特色：</h3>
+                        <ul>
+                            <li><strong>離線隱私：</strong> 檔案不會上傳到任何伺服器，解析和渲染皆在您的瀏覽器中完成。</li>
+                            <li><strong>完美還原：</strong> 比照 Line 聊天介面的對話氣泡、日期分隔線與訊息型態。</li>
+                            <li><strong>強力搜尋與篩選：</strong> 快速找尋歷史訊息，支援針對特定聯絡人或特定日期進行精準搜尋。</li>
+                            <li><strong>統計圖表：</strong> 生成訊息統計圖、活躍時間分析與發言量排行。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 聊天紀錄面板 -->
+            <div id="chat-panel" class="tab-panel">
+                <header id="chat-header">
+                    <div class="chat-info">
+                        <h2 id="active-chat-name">請選擇聊天室</h2>
+                        <span id="active-chat-meta">無選取的對話</span>
+                    </div>
+                    <div class="me-selector-wrapper" id="user-select-me-wrapper" style="display: none;">
+                        <span class="me-label">我自己：</span>
+                        <select id="me-sender-select" class="me-select">
+                            <!-- JS 動態生成 -->
+                        </select>
+                    </div>
+                    <div class="chat-actions">
+                        <button id="export-json-btn" class="btn btn-secondary btn-sm" style="display: none;">匯出 JSON</button>
+                        <button id="delete-chat-btn" class="btn btn-danger btn-sm" style="display: none;">刪除此對話</button>
+                    </div>
+                </header>
+                <!-- 聊天訊息列表 -->
+                <div id="chat-messages">
+                    <!-- 訊息將由 JavaScript 動態生成 -->
+                </div>
+            </div>
+
+            <!-- 相簿面板 -->
+            <div id="gallery-panel" class="tab-panel">
+                <header class="panel-header">
+                    <h2>相簿照片瀏覽</h2>
+                    <p>此處顯示該聊天室中所有已載入的照片。點選照片可查看大圖並定位對話位置。</p>
+                </header>
+                <div id="gallery-grid" class="gallery-container">
+                    <div class="empty-state">尚無已載入的照片</div>
+                </div>
+            </div>
+
+            <!-- 統計分析面板 -->
+            <div id="stats-panel" class="tab-panel">
+                <header class="panel-header">
+                    <h2>對話數據統計</h2>
+                    <p>深入分析您與對方的聊天數據與互動趨勢。</p>
+                </header>
+                <div class="stats-grid">
+                    <div class="stat-card summary-card">
+                        <h3>訊息總覽</h3>
+                        <div class="summary-metrics">
+                            <div class="metric">
+                                <span class="metric-label">總訊息數</span>
+                                <span class="metric-value" id="stat-total-messages">0</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">總發言天數</span>
+                                <span class="metric-value" id="stat-total-days">0</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">照片數量</span>
+                                <span class="metric-value" id="stat-total-photos">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stat-card chart-card">
+                        <h3>發言次數排行榜</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="sender-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="stat-card chart-card">
+                        <h3>每月/每日對話量趨勢</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="timeline-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="stat-card chart-card">
+                        <h3>每日 24 小時活躍時段</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="hourly-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 照片 Lightbox 燈箱放大效果 -->
+    <div id="lightbox" class="lightbox-modal">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightbox-img">
+        <div id="lightbox-caption"></div>
+        <button id="lightbox-jump-btn" class="btn btn-primary">跳轉至對話位置</button>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

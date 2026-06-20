@@ -1,0 +1,23 @@
+# 忽略所有對話紀錄文字檔，保護個人隱私
+*.txt
+!sample_line_chat.txt
+
+# 忽略個人相片或截圖
+*.png
+*.jpg
+*.jpeg
+# 但保留 PWA App 圖示
+!icon-192.png
+!icon-512.png
+
+# 忽略 Python 暫存檔
+__pycache__/
+*.pyc
+
+# 忽略本機自動化設定檔
+export_config.json
+visual_config.json
+*.ini
+
+# 忽略執行用的批次檔 (手機網頁託管不需要)
+*.bat

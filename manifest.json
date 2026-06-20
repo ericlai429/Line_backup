@@ -1,0 +1,24 @@
+{
+  "name": "Line Backup Viewer",
+  "short_name": "Line Backup",
+  "description": "本地運行的 Line 對話紀錄備份瀏覽與分析器",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#859eb9",
+  "theme_color": "#06C755",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any"
+    }
+  ]
+}
