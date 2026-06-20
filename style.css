@@ -181,29 +181,32 @@ body {
 .dark-mode .sun-icon { display: block; }
 .dark-mode .moon-icon { display: none; }
 
-/* Import Section */
+/* Import Section - Compact Row Layout */
 #import-section {
-    padding: 15px 20px;
+    padding: 10px 12px;
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    flex-direction: row; /* Side-by-side layout */
+    gap: 8px;
     border-bottom: 1px solid var(--border-color);
 }
 
 .drop-zone {
-    border: 2px dashed var(--border-color);
-    border-radius: 12px;
-    padding: 16px;
+    flex: 1; /* Equal width columns */
+    border: 1.5px dashed var(--border-color);
+    border-radius: 8px;
+    padding: 8px 4px; /* Shrunk padding */
     text-align: center;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: 4px; /* Shrunk gap */
     color: var(--text-muted);
-    font-size: 0.875rem;
+    font-size: 0.72rem; /* Shrunk font size */
     transition: var(--transition-smooth);
     background-color: rgba(0, 0, 0, 0.01);
+    min-height: 58px; /* Compact height */
 }
 
 .drop-zone:hover, .drop-zone.dragover {
@@ -213,6 +216,8 @@ body {
 }
 
 .drop-zone svg {
+    width: 18px !important; /* Shrunk icon size by half */
+    height: 18px !important;
     transition: transform 0.2s ease;
 }
 
