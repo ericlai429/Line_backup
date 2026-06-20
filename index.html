@@ -164,7 +164,12 @@
                     </div>
                     <div class="chat-actions">
                         <button id="export-json-btn" class="btn btn-secondary btn-sm" style="display: none;">匯出 JSON</button>
-                        <button id="delete-chat-btn" class="btn btn-danger btn-sm" style="display: none;">刪除此對話</button>
+                        <button id="delete-chat-btn" class="btn btn-danger btn-sm" style="display: none;" aria-label="刪除此對話">
+                            <svg class="delete-btn-icon" viewBox="0 0 24 24" width="14" height="14" style="display: inline-block; vertical-align: middle;">
+                                <path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                            </svg>
+                            <span class="delete-btn-text" style="vertical-align: middle;">刪除此對話</span>
+                        </button>
                     </div>
                 </header>
                 <!-- 聊天訊息列表 -->
