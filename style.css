@@ -1707,69 +1707,7 @@ body {
     padding: 15px;
 }
 
-.demo-animation {
-    background: var(--bg-main);
-    border-radius: 8px;
-    height: 140px;
-    position: relative;
-    border: 1px solid var(--border-color);
-    overflow: hidden;
-    margin-bottom: 12px;
-}
 
-.demo-sidebar {
-    width: 80px;
-    height: 100%;
-    background: var(--bg-surface);
-    border-right: 1px solid var(--border-color);
-    padding: 10px 5px;
-}
-
-.demo-file {
-    font-size: 0.6rem;
-    color: var(--text-secondary);
-    background: var(--bg-surface-hover);
-    padding: 4px;
-    margin-bottom: 6px;
-    border-radius: 4px;
-    border: 1px dashed var(--line-primary);
-    text-align: center;
-    animation: dropPulse 3s infinite;
-}
-
-.demo-file:nth-child(2) {
-    animation-delay: 1.5s;
-    border-color: #ffd166;
-}
-
-.demo-cursor {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="%23ffffff" stroke="%23000000" stroke-width="1"><path d="M4 2v20l6-6h10z"/></svg>') no-repeat;
-    animation: dragDrop 3s infinite cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10;
-}
-
-.demo-text {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    line-height: 1.4;
-    text-align: center;
-}
-
-@keyframes dropPulse {
-    0%, 100% { border-color: var(--border-color); background: transparent; }
-    50% { border-color: var(--line-primary); background: rgba(6, 199, 85, 0.1); }
-}
-
-@keyframes dragDrop {
-    0% { top: 20px; left: 120px; transform: scale(1); }
-    20% { top: 20px; left: 120px; transform: scale(0.9); }
-    50% { top: 40px; left: 40px; transform: scale(0.9); }
-    60% { top: 40px; left: 40px; transform: scale(1); }
-    100% { top: 40px; left: 40px; transform: scale(1); opacity: 0; }
-}
 
 /* RWD for mobile */
 @media (max-width: 768px) {
