@@ -1312,3 +1312,31 @@ h2 {
         margin-right: 8px;
     }
 }
+
+/* Load More History Container */
+.load-more-container {
+    display: flex;
+    justify-content: center;
+    padding: 15px 0 5px 0;
+    width: 100%;
+}
+
+.load-more-container .btn {
+    border-radius: 20px;
+    background-color: var(--secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    padding: 8px 18px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: var(--transition-fast);
+    box-shadow: var(--shadow-soft);
+}
+
+.load-more-container .btn:hover {
+    background-color: var(--secondary-hover);
+    border-color: var(--line-primary);
+    color: var(--line-primary);
+}
+

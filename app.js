@@ -12,6 +12,7 @@ const AppState = {
     photosMemory: new Map(), // key -> { photoKey, chatId, fileName, blob }
     activeChatId: null,
     activeTab: 'chat',
+    displayedMessagesCount: 200, // Number of messages to display in chat tab (for progressive rendering)
     chats: [], // Loaded chats list
     messages: [], // Messages for the active chat
     photosMap: new Map(), // Map of filename -> Blob/File for currently loaded session photos
@@ -86,7 +87,7 @@ function initDB() {
 }
 
 // DB Helper Methods
-function saveChatToDB(chat, messages) {
+async function saveChatToDB(chat, messages) {
     if (AppState.isMemoryDB) {
         // Clear existing chat and messages if any
         AppState.chatsMemory = AppState.chatsMemory.filter(c => c.id !== chat.id);
@@ -102,7 +103,8 @@ function saveChatToDB(chat, messages) {
         return Promise.resolve();
     }
 
-    return new Promise((resolve, reject) => {
+    // 1. Save chat info and delete any existing messages with the same chatId using index (extremely fast)
+    await new Promise((resolve, reject) => {
         const transaction = AppState.db.transaction(['chats', 'messages'], 'readwrite');
         
         transaction.onerror = (e) => reject(e);
@@ -113,22 +115,34 @@ function saveChatToDB(chat, messages) {
 
         chatsStore.put(chat);
 
-        // Clear old messages and insert new
-        const request = msgsStore.openCursor();
+        // Delete existing messages using index
+        const index = msgsStore.index('chatId');
+        const request = index.openCursor(IDBKeyRange.only(chat.id));
         request.onsuccess = (e) => {
             const cursor = e.target.result;
             if (cursor) {
-                if (cursor.value.chatId === chat.id) {
-                    cursor.delete();
-                }
+                msgsStore.delete(cursor.primaryKey);
                 cursor.continue();
-            } else {
-                messages.forEach(msg => {
-                    msgsStore.add(msg);
-                });
             }
         };
     });
+
+    // 2. Save messages in batches of 2000 to prevent browser out-of-memory crash
+    const BATCH_SIZE = 2000;
+    for (let i = 0; i < messages.length; i += BATCH_SIZE) {
+        const chunk = messages.slice(i, i + BATCH_SIZE);
+        await new Promise((resolve, reject) => {
+            const transaction = AppState.db.transaction(['messages'], 'readwrite');
+            
+            transaction.onerror = (e) => reject(e);
+            transaction.oncomplete = () => resolve();
+
+            const msgsStore = transaction.objectStore('messages');
+            chunk.forEach(msg => {
+                msgsStore.add(msg);
+            });
+        });
+    }
 }
 
 function savePhotoToDB(chatId, fileName, blob) {
@@ -201,26 +215,26 @@ function deleteChatFromDB(chatId) {
 
         transaction.objectStore('chats').delete(chatId);
 
+        // Delete messages using chatId index (very fast)
         const msgStore = transaction.objectStore('messages');
-        const msgCursor = msgStore.openCursor();
+        const msgIndex = msgStore.index('chatId');
+        const msgCursor = msgIndex.openCursor(IDBKeyRange.only(chatId));
         msgCursor.onsuccess = (e) => {
             const cursor = e.target.result;
             if (cursor) {
-                if (cursor.value.chatId === chatId) {
-                    cursor.delete();
-                }
+                msgStore.delete(cursor.primaryKey);
                 cursor.continue();
             }
         };
 
+        // Delete photos using chatId index (very fast)
         const photoStore = transaction.objectStore('photos');
-        const photoCursor = photoStore.openCursor();
+        const photoIndex = photoStore.index('chatId');
+        const photoCursor = photoIndex.openCursor(IDBKeyRange.only(chatId));
         photoCursor.onsuccess = (e) => {
             const cursor = e.target.result;
             if (cursor) {
-                if (cursor.value.chatId === chatId) {
-                    cursor.delete();
-                }
+                photoStore.delete(cursor.primaryKey);
                 cursor.continue();
             }
         };
@@ -608,6 +622,16 @@ function initUI() {
         });
     }
 
+    // Scroll listener on chat messages to auto-trigger loading history when scrolled to top
+    const chatMessagesEl = document.getElementById('chat-messages');
+    if (chatMessagesEl) {
+        chatMessagesEl.addEventListener('scroll', () => {
+            if (chatMessagesEl.scrollTop === 0) {
+                loadMoreChatMessages();
+            }
+        });
+    }
+
     // Load initial chat list
     refreshChatList();
 }
@@ -832,6 +856,7 @@ async function refreshChatList() {
 
 async function selectChat(chatId) {
     AppState.activeChatId = chatId;
+    AppState.displayedMessagesCount = 200; // Reset display count for progressive rendering
     
     // Toggle mobile screen container view
     const containerEl = document.getElementById('app-container');
@@ -936,7 +961,7 @@ function populateMeSenderFilter(senders) {
 // ==========================================================================
 // 7. RENDER VIEWPORT: CHAT HISTORY
 // ==========================================================================
-function renderChatMessages() {
+function renderChatMessages(autoScroll = true) {
     const container = document.getElementById('chat-messages');
     container.innerHTML = '';
 
@@ -948,7 +973,22 @@ function renderChatMessages() {
         return;
     }
 
-    filtered.forEach((msg, index) => {
+    // Slice to only show the last N messages
+    const sliced = filtered.slice(-AppState.displayedMessagesCount);
+
+    // If there are more historical messages, show a "load more" button at the top
+    if (filtered.length > AppState.displayedMessagesCount) {
+        const loadMoreDiv = document.createElement('div');
+        loadMoreDiv.className = 'load-more-container';
+        loadMoreDiv.innerHTML = `
+            <button class="btn btn-secondary btn-sm" onclick="loadMoreChatMessages()">
+                向上滑動或點擊載入更多歷史訊息 (${filtered.length - AppState.displayedMessagesCount} 則)
+            </button>
+        `;
+        container.appendChild(loadMoreDiv);
+    }
+
+    sliced.forEach((msg, index) => {
         // Date Separators or Date changes
         if (msg.type === 'date') {
             const dateDiv = document.createElement('div');
@@ -1050,10 +1090,32 @@ function renderChatMessages() {
         container.appendChild(msgDiv);
     });
 
-    // Auto-scroll to bottom of chat if no filters active
-    if (!AppState.currentFilters.keyword) {
+    // Auto-scroll to bottom of chat if no filters active and autoScroll is true
+    if (autoScroll && !AppState.currentFilters.keyword) {
         container.scrollTop = container.scrollHeight;
     }
+}
+
+function loadMoreChatMessages() {
+    const container = document.getElementById('chat-messages');
+    if (!container) return;
+
+    // Check if we have more messages to load
+    const filtered = getFilteredMessages();
+    if (AppState.displayedMessagesCount >= filtered.length) return;
+
+    // Save current scroll height to restore scroll position after rendering
+    const oldScrollHeight = container.scrollHeight;
+
+    // Load next batch
+    AppState.displayedMessagesCount = Math.min(filtered.length, AppState.displayedMessagesCount + 200);
+
+    // Re-render without auto scrolling to bottom
+    renderChatMessages(false);
+
+    // Restore scroll position
+    const newScrollHeight = container.scrollHeight;
+    container.scrollTop = newScrollHeight - oldScrollHeight;
 }
 
 
@@ -1320,6 +1382,8 @@ function applyFilters() {
     AppState.currentFilters.dateFrom = document.getElementById('date-from').value;
     AppState.currentFilters.dateTo = document.getElementById('date-to').value;
 
+    AppState.displayedMessagesCount = 200; // Reset display count when filters change
+
     if (AppState.activeTab === 'chat') {
         renderChatMessages();
     } else if (AppState.activeTab === 'gallery') {
@@ -1334,6 +1398,7 @@ function clearFilters() {
     document.getElementById('date-to').value = '';
     
     AppState.currentFilters = { keyword: '', sender: '', dateFrom: '', dateTo: '' };
+    AppState.displayedMessagesCount = 200; // Reset display count when filters are cleared
     
     if (AppState.activeTab === 'chat') {
         renderChatMessages();
