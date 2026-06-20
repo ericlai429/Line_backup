@@ -1707,7 +1707,28 @@ body {
     padding: 15px;
 }
 
+#demo-hint-overlay {
+    position: absolute;
+    top: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    z-index: 10;
+    pointer-events: none;
+    animation: fadeOutHint 4s forwards;
+    animation-delay: 2s;
+    backdrop-filter: blur(2px);
+}
 
+@keyframes fadeOutHint {
+    0% { opacity: 1; }
+    100% { opacity: 0; display: none; }
+}
 
 /* RWD for mobile */
 @media (max-width: 768px) {
