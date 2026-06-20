@@ -1,27 +1,17 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Line 對話紀錄備份瀏覽器</title>
-    <!-- Google Fonts: Noto Sans TC & Outfit -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Chart.js for analytics -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- PWA Settings -->
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192.png">
+    <title>Line 到話紀錄備份瀏覽器</title>
+    <meta name="description" content="在本地瀏覽器中安全地查看您的 LINE 對話備份紀錄">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#06C755">
     
-    <link rel="stylesheet" href="style.css?v=4">
+    <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body class="dark-mode">
-    <!-- Toggle button moved into sidebar -->
 
     <div id="device-wrapper" class="mobile-mode">
         <div class="iphone-notch"></div>
@@ -29,27 +19,36 @@
             <div class="version-badge">1.04</div>
             <!-- 側邊欄 -->
             <aside id="sidebar">
+
+            <!-- 版本C：極簡標題，整合PC切換鈕與主題切換 -->
             <header id="sidebar-header">
                 <div class="logo-area">
-                    <svg class="logo-icon" viewBox="0 0 24 24" width="28" height="28">
+                    <svg class="logo-icon" viewBox="0 0 24 24" width="22" height="22">
                         <path fill="currentColor" d="M12 2C6.48 2 2 5.48 2 9.8c0 2.45 1.4 4.63 3.6 6.03L4.62 20.3c-.09.31.14.62.46.57l4.57-.75c.77.17 1.57.28 2.35.28 5.52 0 10-3.48 10-7.8S17.52 2 12 2zm-2.8 11.2H7.6c-.33 0-.6-.27-.6-.6s.27-.6.6-.6h1.6c.33 0 .6.27 .6.6s-.27.6-.6.6zm0-2.4H7.6c-.33 0-.6-.27-.6-.6s.27-.6.6-.6h1.6c.33 0 .6.27 .6.6s-.27.6-.6.6zm4.8 2.4h-1.6c-.33 0-.6-.27-.6-.6s.27-.6.6-.6h1.6c.33 0 .6.27 .6.6s-.27.6-.6.6zm0-2.4h-1.6c-.33 0-.6-.27-.6-.6s.27-.6.6-.6h1.6c.33 0 .6.27 .6.6s-.27.6-.6.6zm3.2 2.4h-1.6c-.33 0-.6-.27-.6-.6s.27-.6.6-.6h1.6c.33 0 .6.27 .6.6s-.27.6-.6.6zm0-2.4h-1.6c-.33 0-.6-.27-.6-.6s.27-.6.6-.6h1.6c.33 0 .6.27 .6.6s-.27.6-.6.6z"/>
                     </svg>
                     <h1>Line Backup</h1>
                 </div>
-                <button id="theme-toggle" aria-label="切換深淺色模式">
-                    <!-- Sun Icon -->
-                    <svg class="sun-icon" viewBox="0 0 24 24" width="20" height="20">
-                        <circle cx="12" cy="12" r="5" fill="currentColor"/>
-                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    <!-- Moon Icon -->
-                    <svg class="moon-icon" viewBox="0 0 24 24" width="20" height="20">
-                        <path fill="currentColor" d="M12.3 22h-.1c-5.5 0-10-4.5-10-10C2.2 6.9 6.2 2.7 11.5 2.1c.5-.1 1 .3.9.8-.1.5-.6.9-1.1.9-4 0-7.2 3.2-7.2 7.2s3.2 7.2 7.2 7.2c3 0 5.7-1.8 6.7-4.5.2-.5.8-.8 1.3-.6.5.2.8.8.6 1.3-.9 2.5-3.3 4.3-6.1 4.7-1 .1-1 .1-1.5.1z"/>
-                    </svg>
-                </button>
+                <div class="header-actions">
+                    <!-- 切換PC/iPhone整合進標題列 -->
+                    <button id="toggle-view-btn" class="simulator-btn" title="切換PC/iPhone模式">
+                        <svg class="mode-icon" viewBox="0 0 24 24" width="15" height="15">
+                            <path id="mode-icon-path" fill="currentColor" d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/>
+                        </svg>
+                        <span id="toggle-view-text">PC</span>
+                    </button>
+                    <button id="theme-toggle" aria-label="切換深淺色模式">
+                        <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18">
+                            <circle cx="12" cy="12" r="5" fill="currentColor"/>
+                            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <svg class="moon-icon" viewBox="0 0 24 24" width="18" height="18">
+                            <path fill="currentColor" d="M12.3 22h-.1c-5.5 0-10-4.5-10-10C2.2 6.9 6.2 2.7 11.5 2.1c.5-.1 1 .3.9.8-.1.5-.6.9-1.1.9-4 0-7.2 3.2-7.2 7.2s3.2 7.2 7.2 7.2c3 0 5.7-1.8 6.7-4.5.2-.5.8-.8 1.3-.6.5.2.8.8.6 1.3-.9 2.5-3.3 4.3-6.1 4.7-1 .1-1 .1-1.5.1z"/>
+                        </svg>
+                    </button>
+                </div>
             </header>
 
-            <!-- 載入與檔案庫 -->
+            <!-- 版本C：匯入區，最小化圖示列 -->
             <section id="import-section">
                 <div class="drop-zone" id="txt-drop-zone">
                     <svg viewBox="0 0 24 24" width="32" height="32">
@@ -62,21 +61,12 @@
                     <svg viewBox="0 0 24 24" width="32" height="32">
                         <path fill="currentColor" d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2zM5 5v14h14V5H5zm12 6-3.5 4.5-2.5-3L7 17h10l-3-6z"/>
                     </svg>
-                    <span>拖放相片資料夾或檔案</span>
+                    <span>拖放相片</span>
                     <input type="file" id="media-file-input" multiple accept="image/*" style="display: none;">
                 </div>
             </section>
 
-            <!-- 手機/PC 切換按鈕 -->
-            <div id="simulator-toggle-container">
-                <button id="toggle-view-btn" class="simulator-btn">
-                    <svg class="mode-icon" viewBox="0 0 24 24" width="14" height="14" style="display: inline-block; vertical-align: middle; margin-right: 4px;">
-                        <path id="mode-icon-path" fill="currentColor" d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/>
-                    </svg>
-                    <span id="toggle-view-text" style="vertical-align: middle;">切換為 PC 模式</span>
-                </button>
-            </div>
-            <!-- 對話列表 -->
+            <!-- 版本C：對話列表，第一優先緊接在匯入下方，最大佔比 -->
             <section id="chat-list-section">
                 <h2>匯入的聊天室</h2>
                 <div id="chat-list" class="list-container">
@@ -84,22 +74,28 @@
                 </div>
             </section>
 
-            <!-- 篩選與搜尋面板 -->
+            <!-- 版本C：內嵌搜尋列，單行緊湊 -->
             <section id="filter-section">
-                <h2>篩選與搜尋</h2>
-                <div class="filter-group">
-                    <input type="text" id="search-input" placeholder="搜尋訊息關鍵字...">
+                <div class="filter-inline-row">
+                    <svg viewBox="0 0 24 24" width="15" height="15" class="filter-search-icon"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    <input type="text" id="search-input" placeholder="搜尋訊息...">
+                    <button id="filter-toggle-btn" class="btn-icon filter-expand-btn" title="進階篩選">
+                        <svg viewBox="0 0 24 24" width="15" height="15"><path fill="currentColor" d="M4.25 5.61C6.27 8.2 10 13 10 13v6c0 .55.45 1 1 1h2c.55 0 1-.45 1-1v-6s3.72-4.8 5.74-7.39c.51-.66.04-1.61-.79-1.61H5.04c-.83 0-1.3.95-.79 1.61z"/></svg>
+                    </button>
                 </div>
-                <div class="filter-group select-wrapper">
-                    <select id="sender-filter">
-                        <option value="">所有發言者</option>
-                    </select>
+                <!-- 進階篩選（預設收合） -->
+                <div id="filter-advanced" class="filter-advanced-panel" style="display:none;">
+                    <div class="filter-group select-wrapper">
+                        <select id="sender-filter">
+                            <option value="">所有發言者</option>
+                        </select>
+                    </div>
+                    <div class="filter-group date-filters">
+                        <input type="date" id="date-from">
+                        <input type="date" id="date-to">
+                    </div>
+                    <button id="clear-filters" class="btn btn-secondary">重設篩選</button>
                 </div>
-                <div class="filter-group date-filters">
-                    <input type="date" id="date-from" placeholder="開始日期">
-                    <input type="date" id="date-to" placeholder="結束日期">
-                </div>
-                <button id="clear-filters" class="btn btn-secondary">重設篩選</button>
             </section>
 
             <!-- 導覽切換 (切換主畫面內容) -->
@@ -280,14 +276,22 @@
             if (wrapper.classList.contains('mobile-mode')) {
                 wrapper.classList.remove('mobile-mode');
                 wrapper.classList.add('desktop-mode');
-                textEl.textContent = '切換為 i13 Mini 模式';
+                textEl.textContent = 'iPhone';
                 pathEl.setAttribute('d', 'M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z');
             } else {
                 wrapper.classList.remove('desktop-mode');
                 wrapper.classList.add('mobile-mode');
-                textEl.textContent = '切換為 PC 模式';
+                textEl.textContent = 'PC';
                 pathEl.setAttribute('d', 'M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7l-2 3v1h8v-1l-2-3h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z');
             }
+        });
+
+        // 進階篩選收合功能
+        document.getElementById('filter-toggle-btn').addEventListener('click', function() {
+            const panel = document.getElementById('filter-advanced');
+            const isHidden = panel.style.display === 'none';
+            panel.style.display = isHidden ? 'block' : 'none';
+            this.style.color = isHidden ? 'var(--line-primary)' : '';
         });
     </script>
 
