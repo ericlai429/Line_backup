@@ -1,5 +1,5 @@
 {
-  "name": "Line 對話紀錄備份瀏覽器",
+  "name": "Line 對話紀錄備份(免安裝)",
   "short_name": "Line Backup",
   "description": "本地運行的 Line 對話紀錄備份瀏覽與分析器",
   "start_url": "./index.html",
