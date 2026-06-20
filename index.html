@@ -259,6 +259,20 @@
                 </div>
             </div>
         </main>
+
+        <!-- Demo 提示浮窗（前3次開啟自動顯示） -->
+        <div id="demo-widget" class="demo-hidden">
+            <div class="demo-header">
+                <span>💡 快速教學</span>
+                <button id="demo-close" title="關閉">&times;</button>
+            </div>
+            <div class="demo-content">
+                <video id="demo-video" autoplay loop muted playsinline width="100%">
+                    <source src="Demo.MP4" type="video/mp4">
+                    您的瀏覽器不支援影片播放。
+                </video>
+            </div>
+        </div>
     </div>
 
     <!-- 照片 Lightbox 燈箱放大效果 -->
@@ -300,20 +314,7 @@
         });
     </script>
 
-    <!-- Demo 提示浮窗（前3次開啟自動顯示） -->
-    <div id="demo-widget" class="demo-hidden">
-        <div class="demo-header">
-            <span>💡 快速教學</span>
-            <button id="demo-close" title="關閉">&times;</button>
-        </div>
-        <div class="demo-content">
-            <video id="demo-video" autoplay loop muted playsinline width="100%">
-                <!-- 請將您的影片命名為 demo.mp4 並放在專案根目錄下 -->
-                <source src="Demo.MP4" type="video/mp4">
-                您的瀏覽器不支援影片播放。
-            </video>
-        </div>
-    </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

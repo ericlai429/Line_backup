@@ -1660,7 +1660,7 @@ body {
 
 /* Demo Widget 樣式與動畫 */
 #demo-widget {
-    position: fixed;
+    position: absolute;
     bottom: 30px;
     right: 30px;
     width: 320px;
