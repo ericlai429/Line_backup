@@ -323,8 +323,16 @@
         document.addEventListener('DOMContentLoaded', function() {
             const demoWidget = document.getElementById('demo-widget');
             const demoClose = document.getElementById('demo-close');
+            const demoVideo = document.getElementById('demo-video');
             const demoCountKey = 'line_backup_demo_count_v2';
             let demoCount = parseInt(localStorage.getItem(demoCountKey) || '0');
+
+            function hideDemo() {
+                if (!demoWidget.classList.contains('demo-hidden')) {
+                    demoWidget.classList.add('demo-hidden');
+                    if (demoVideo) demoVideo.pause();
+                }
+            }
 
             if (demoCount < 3) {
                 setTimeout(() => {
@@ -334,8 +342,14 @@
                 }, 1500);
             }
 
-            demoClose.addEventListener('click', () => {
-                demoWidget.classList.add('demo-hidden');
+            demoClose.addEventListener('click', (e) => {
+                e.stopPropagation();
+                hideDemo();
+            });
+
+            // 偵測任意點擊即停止播放並隱藏 Demo
+            document.addEventListener('click', () => {
+                hideDemo();
             });
         });
     </script>
