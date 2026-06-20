@@ -393,6 +393,23 @@ h2 {
     background-color: var(--danger-hover);
 }
 
+.btn-icon {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--text-primary);
+    padding: 8px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+}
+
+.btn-icon:hover {
+    background-color: var(--secondary);
+}
+
 .btn-sm {
     padding: 6px 12px;
     font-size: 0.75rem;
@@ -1063,25 +1080,188 @@ h2 {
     }
 }
 
+/* Custom scrollbar styling specifically for chat messages to make it very visible and easy to scroll */
+#chat-messages::-webkit-scrollbar {
+    width: 10px; /* Wider scrollbar on desktop and mobile */
+    height: 10px;
+}
+
+#chat-messages::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05); /* Light grey track background */
+    border-radius: 5px;
+}
+
+#chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(6, 199, 85, 0.4); /* Clear LINE-green thumb */
+    border-radius: 5px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+#chat-messages::-webkit-scrollbar-thumb:hover {
+    background: rgba(6, 199, 85, 0.6);
+}
+
+.dark-mode #chat-messages::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.dark-mode #chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(6, 199, 85, 0.5);
+}
+
+/* General scrollbar visibility for touch screens */
+#chat-messages {
+    -webkit-overflow-scrolling: touch;
+    overflow-y: scroll;
+}
+
 @media (max-width: 768px) {
+    /* Base container behavior */
     #app-container {
         flex-direction: column;
+        overflow: hidden;
+        height: 100vh;
+        width: 100vw;
     }
-    #sidebar {
+
+    /* 1. When a chat is NOT selected: show full-screen sidebar to upload and choose chat */
+    #app-container:not(.chat-selected) #sidebar {
         width: 100%;
-        height: auto;
+        height: 100vh;
         border-right: none;
-        border-bottom: 1px solid var(--border-color);
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
     }
-    #sidebar-nav {
-        border-bottom: 1px solid var(--border-color);
+
+    #app-container:not(.chat-selected) #main-content {
+        display: none;
     }
-    #main-content {
-        height: calc(100vh - 350px);
+
+    /* 2. When a chat IS selected: hide sidebar except navigation, show full-screen main content */
+    #app-container.chat-selected #sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 56px; /* Native tab bar height */
+        border-right: none;
+        border-top: 1px solid var(--border-color);
+        background-color: var(--bg-card);
+        z-index: 100;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
     }
+
+    /* Hide unnecessary sidebar elements in detail view */
+    #app-container.chat-selected #sidebar #sidebar-header,
+    #app-container.chat-selected #sidebar #import-section,
+    #app-container.chat-selected #sidebar #chat-list-section,
+    #app-container.chat-selected #sidebar #filter-section {
+        display: none !important;
+    }
+
+    /* Display bottom nav bar horizontally */
+    #app-container.chat-selected #sidebar #sidebar-nav {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        border-top: none;
+    }
+
+    #app-container.chat-selected #sidebar #sidebar-nav .nav-item {
+        padding: 10px 0;
+        font-size: 0.72rem;
+    }
+
+    /* Main content details panel fills remaining space */
+    #app-container.chat-selected #main-content {
+        width: 100%;
+        height: calc(100vh - 56px); /* Fills screen minus tab bar */
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Compact headers on mobile */
+    #chat-header, .panel-header {
+        height: 52px !important;
+        padding: 0 12px !important;
+        gap: 8px !important;
+    }
+
+    #chat-header {
+        justify-content: flex-start;
+    }
+
+    .chat-info {
+        flex-grow: 1;
+        min-width: 0; /* Enable truncation */
+    }
+
+    .chat-info h2, .panel-header h2 {
+        font-size: 0.95rem !important;
+        font-weight: 600 !important;
+        margin: 0 !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Hide subdescriptions/metadata on mobile to fit the narrow screen */
+    #active-chat-meta, .panel-header p {
+        display: none !important;
+    }
+
+    .panel-title-area {
+        flex-grow: 1;
+        min-width: 0;
+    }
+
+    /* Compact me-selector in header */
+    .me-selector-wrapper {
+        padding: 3px 8px !important;
+        border-radius: 8px !important;
+        gap: 4px !important;
+    }
+
+    .me-label {
+        font-size: 0.72rem !important;
+    }
+
+    .me-select {
+        font-size: 0.78rem !important;
+        max-width: 70px !important;
+    }
+
+    /* Compact actions */
+    .chat-actions {
+        gap: 4px !important;
+    }
+
+    #export-json-btn {
+        display: none !important; /* Hide export button on mobile */
+    }
+
+    #delete-chat-btn {
+        padding: 4px 8px !important;
+        font-size: 0.72rem !important;
+    }
+
+    /* Expand chat messages padding for mobile */
+    #chat-messages {
+        padding: 15px 12px;
+        gap: 12px;
+    }
+
+    .msg-item {
+        max-width: 85%; /* Make speech bubbles wider on mobile screens */
+    }
+
     .guide-cards {
         grid-template-columns: 1fr;
     }
+
     .features-list ul {
         grid-template-columns: 1fr;
     }
@@ -1119,4 +1299,16 @@ h2 {
     font-weight: 600;
     cursor: pointer;
     padding-right: 5px;
+}
+
+/* Back to List button visibility rules */
+.back-to-list-btn {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .chat-selected .back-to-list-btn {
+        display: inline-flex !important;
+        margin-right: 8px;
+    }
 }

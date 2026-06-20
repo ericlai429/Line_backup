@@ -146,6 +146,11 @@
             <!-- 聊天紀錄面板 -->
             <div id="chat-panel" class="tab-panel">
                 <header id="chat-header">
+                    <button class="back-to-list-btn btn btn-icon" aria-label="返回列表">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                        </svg>
+                    </button>
                     <div class="chat-info">
                         <h2 id="active-chat-name">請選擇聊天室</h2>
                         <span id="active-chat-meta">無選取的對話</span>
@@ -170,8 +175,15 @@
             <!-- 相簿面板 -->
             <div id="gallery-panel" class="tab-panel">
                 <header class="panel-header">
-                    <h2>相簿照片瀏覽</h2>
-                    <p>此處顯示該聊天室中所有已載入的照片。點選照片可查看大圖並定位對話位置。</p>
+                    <button class="back-to-list-btn btn btn-icon" aria-label="返回列表">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                        </svg>
+                    </button>
+                    <div class="panel-title-area">
+                        <h2>相簿照片瀏覽</h2>
+                        <p>此處顯示該聊天室中所有已載入的照片。點選照片可查看大圖並定位對話位置。</p>
+                    </div>
                 </header>
                 <div id="gallery-grid" class="gallery-container">
                     <div class="empty-state">尚無已載入的照片</div>
@@ -181,8 +193,15 @@
             <!-- 統計分析面板 -->
             <div id="stats-panel" class="tab-panel">
                 <header class="panel-header">
-                    <h2>對話數據統計</h2>
-                    <p>深入分析您與對方的聊天數據與互動趨勢。</p>
+                    <button class="back-to-list-btn btn btn-icon" aria-label="返回列表">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="currentColor" d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/>
+                        </svg>
+                    </button>
+                    <div class="panel-title-area">
+                        <h2>對話數據統計</h2>
+                        <p>深入分析您與對方的聊天數據與互動趨勢。</p>
+                    </div>
                 </header>
                 <div class="stats-grid">
                     <div class="stat-card summary-card">

@@ -587,6 +587,16 @@ function initUI() {
     document.getElementById('delete-chat-btn').addEventListener('click', deleteActiveChat);
     document.getElementById('export-json-btn').addEventListener('click', exportChatAsJSON);
 
+    // Mobile Back Buttons
+    document.querySelectorAll('.back-to-list-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const containerEl = document.getElementById('app-container');
+            if (containerEl) {
+                containerEl.classList.remove('chat-selected');
+            }
+        });
+    });
+
     // Myself sender selection change
     const meSelect = document.getElementById('me-sender-select');
     if (meSelect) {
@@ -823,6 +833,12 @@ async function refreshChatList() {
 async function selectChat(chatId) {
     AppState.activeChatId = chatId;
     
+    // Toggle mobile screen container view
+    const containerEl = document.getElementById('app-container');
+    if (containerEl) {
+        containerEl.classList.add('chat-selected');
+    }
+
     // Set active item class
     document.querySelectorAll('.chat-item').forEach(item => {
         if (item.getAttribute('data-id') === chatId) {
@@ -1347,6 +1363,12 @@ async function deleteActiveChat() {
         
         document.getElementById('delete-chat-btn').style.display = 'none';
         document.getElementById('export-json-btn').style.display = 'none';
+        
+        // Remove active chat class from container
+        const containerEl = document.getElementById('app-container');
+        if (containerEl) {
+            containerEl.classList.remove('chat-selected');
+        }
         
         await refreshChatList();
         alert('聊天紀錄已成功刪除！');
